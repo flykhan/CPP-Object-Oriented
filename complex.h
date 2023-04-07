@@ -13,7 +13,7 @@ class complex
 public:
     // 构造函数
     complex(double r = 0, double i = 0) // constructor 构造函数，double r = 0, double i = 0 表示默认实参
-        : re(r), im(i)                  // 初值列，初始化
+        : re(r), im(i)                  // 初值列，初始化 re 和 im 的值
     {
     }
 
@@ -23,21 +23,21 @@ public:
     complex &operator*=(const complex &); // operator*=: 重载运算符*=，返回值为 complex 类型的引用，参数为 const 类型的 complex 类型的引用，表示对复数进行乘法操作，但是不改变原来的复数的值，而是返回一个新的复数的值。
     complex &operator/=(const complex &); // operator/=: 重载运算符/=，返回值为 complex 类型的引用，参数为 const 类型的 complex 类型的引用，表示对复数进行除法操作，但是不改变原来的复数的值，而是返回一个新的复数的值。
 
-    // 其他函数
-    double real() const { return re; } // const 表示不允许修改对象的值，只是读取 re 的值
+    // 其他函数: 返回复数的实部和虚部
+    double real() const { return re; } // 这两个函数不改动 re 和 im 的值，因此使用 const 修饰，表示这两个函数不会改变类的成员变量的值
     double imag() const { return im; }
 
 private:
     // private: 表示私有成员，只能在类内部访问，不能在类外部访问
     double re, im;
 
-    // 友元函数: 友元函数可以访问类的私有成员
+    // 友元函数: 友元函数可以在类声明之外访问类的私有成员，但是友元函数不是类的成员函数，因此不能使用 this 指针，也不能使用类的成员变量，只能使用类的成员函数。
     friend complex &__doapl(complex *, const complex &);
     friend complex &__doami(complex *, const complex &);
     friend complex &__doaml(complex *, const complex &);
 };
 
-// 内联函数的定义
+// 内联函数的定义：inline 表示内联函数，内联函数的定义必须和声明放在一起，不能分开放在不同的文件中。
 inline complex &
 __doapl(complex *ths, const complex &r) // ths: this 指针，指向当前对象的指针，r: 传入的参数，const 类型的 complex 类型的引用，表示对复数进行加法操作，但是不改变原来的复数的值，而是返回一个新的复数的值
 {
@@ -47,9 +47,9 @@ __doapl(complex *ths, const complex &r) // ths: this 指针，指向当前对象
 }
 
 inline complex &
-complex::operator+=(const complex &r)
+complex::operator+=(const complex &r) // :: 表示作用域运算符，表示 complex 类的作用域，表示在 complex 类中定义的 operator+= 函数
 {
-    return __doapl(this, r);
+    return __doapl(this, r); // this: this 指针，指向当前对象的指针，r: 传入的参数，const 类型的 complex 类型的引用，表示对复数进行加法操作，但是不改变原来的复数的值，而是返回一个新的复数的值
 }
 
 inline complex &
@@ -94,7 +94,7 @@ real(const complex &x)
 }
 
 // 重载运算符的定义，需要定义三种情况：两个复数相加，一个复数和一个实数相加，一个实数和一个复数相加
-inline complex
+inline complex // local 不能传引用，因为返回值是一个临时对象，不能返回引用
 operator+(const complex &x, const complex &y)
 {
     return complex(real(x) + real(y), imag(x) + imag(y)); // 返回两个复数的和
